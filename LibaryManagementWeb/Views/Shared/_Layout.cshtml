@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - LibaryManagementWeb</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/datatables/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="~/lib/datatables/css/dataTables.bootstrap4.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/lib/font-awesome/css/fontawesome.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/LibaryManagementWeb.styles.css" asp-append-version="true" />
 </head>
@@ -31,11 +36,10 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Leave Management</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Separated link</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="LeaveTypes" asp-action="">Leave Types</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Leave Allocation</a>
+                                <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Leave Request</a>                             
+                                <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Employee Management</a>
                             </div>
                         </li>
                     </ul>
@@ -57,6 +61,11 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="~/lib/datatables/js/jquery.dataTables.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
+@*    <script src="~/lib/font-awesome/js/all.js"></script>
+    <script src="~/lib/font-awesome/js/fontawesome.js"></script>*@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

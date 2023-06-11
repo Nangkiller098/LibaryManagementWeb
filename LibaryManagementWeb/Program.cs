@@ -1,3 +1,4 @@
+using LibaryManagementWeb.Configuration;
 using LibaryManagementWeb.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,6 +12,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+//add for AutoMapper 
+builder.Services.AddAutoMapper(typeof(MapperConfig));
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
