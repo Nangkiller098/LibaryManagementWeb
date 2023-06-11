@@ -1,5 +1,7 @@
 using LibaryManagementWeb.Configuration;
+using LibaryManagementWeb.Contract;
 using LibaryManagementWeb.Data;
+using LibaryManagementWeb.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +15,20 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-//add for AutoMapper 
+//Inject Repository 
+
+//everytime request and inject it generate new copy or brand new connection
+//builder.Services.AddTransient<ILeaveTypeRepository, LeaveTypeRepository>();
+
+//put single instante server to entrie application(good using for loging)
+//builder.Services.AddSingleton<ILeaveTypeRepository, LeaveTypeRepository>();
+
+//it open and close connection after done
+builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+
+//add for AutoMapper  
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Services.AddControllersWithViews();
