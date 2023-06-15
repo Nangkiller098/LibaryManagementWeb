@@ -23,7 +23,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                    <ul class="navbar- nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
@@ -33,15 +33,19 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">My Leave</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Leave Management</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" asp-area="" asp-controller="LeaveTypes" asp-action="">Leave Types</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Leave Allocation</a>
-                                <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Leave Request</a>                             
-                                <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Employee Management</a>
-                            </div>
-                        </li>
+                        @if(User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Leave Management</a>
+                                <div class="dropdown-menu" text-dark>
+                                    <a class="dropdown-item" asp-area="" asp-controller="LeaveTypes" asp-action="">Leave Types</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Leave Allocation</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Leave Request</a>
+                                    <a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Employee Management</a>
+                                </div>
+                            </li>
+                        }
+
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

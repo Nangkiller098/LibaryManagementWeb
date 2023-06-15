@@ -2,11 +2,14 @@
 using LibaryManagementWeb.Contract;
 using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibaryManagementWeb.Controllers
 {
+    [Authorize(Roles = Roles.Administrator)]
+    //for muntiple roles [Authorize(Roles = "Administrator,Supervisor,BM,etc")]
     public class LeaveTypesController : Controller
     {
         private readonly IMapper _mapper;
@@ -37,6 +40,7 @@ namespace LibaryManagementWeb.Controllers
             return View(leaveTypeVM);
         }
 
+        [Authorize(Roles = "Administrator")]
         // GET: LeaveTypes/Create
         public IActionResult Create()
         {
@@ -48,6 +52,7 @@ namespace LibaryManagementWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Create(LeaveTypeVM leaveTypeVM)
         {
             if (ModelState.IsValid)
@@ -60,6 +65,7 @@ namespace LibaryManagementWeb.Controllers
         }
 
         // GET: LeaveTypes/Edit/5
+
         public async Task<IActionResult> Edit(int? id)
         {
             var leaveType = await _leaveTypeRepository.GetAsync(id);
@@ -76,6 +82,7 @@ namespace LibaryManagementWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Edit(int id, LeaveTypeVM leaveTypeVM)
         {
             if (id != leaveTypeVM.Id)

@@ -2,8 +2,10 @@ using LibaryManagementWeb.Configuration;
 using LibaryManagementWeb.Contract;
 using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Repositories;
-using Microsoft.EntityFrameworkCore;
+using LibaryManagementWeb.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,8 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-
+builder.Services.AddTransient<IEmailSender>(s => new EmailSendeer("localhost", 25, "no-reply@leavemanagement.com"));
 //Inject Repository 
 
 //everytime request and inject it generate new copy or brand new connection

@@ -26,10 +26,10 @@ namespace LibaryManagementWeb.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> Exists(int id)
+        public Task<bool> Exists(int id)
         {
             var entity = GetAsync(id);
-            return entity != null;
+            return Task.FromResult(entity != null);
         }
 
         public async Task<List<T>> GetAllAsync()
