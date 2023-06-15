@@ -14,11 +14,13 @@ namespace LibaryManagementWeb.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
+        private readonly ILeaveAllocationRepository _leaveAllocationRepository;
 
-        public LeaveTypesController(IMapper mapper, ILeaveTypeRepository leaveTypeRepository)
+        public LeaveTypesController(IMapper mapper, ILeaveTypeRepository leaveTypeRepository, ILeaveAllocationRepository leaveAllocationRepository)
         {
             this._mapper = mapper;
             this._leaveTypeRepository = leaveTypeRepository;
+            this._leaveAllocationRepository = leaveAllocationRepository;
         }
 
         // GET: LeaveTypes
@@ -114,6 +116,13 @@ namespace LibaryManagementWeb.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _leaveTypeRepository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AllocateLeave(int id)
+        {
+            await _leaveAllocationRepository.LeaveAllocation(id);
             return RedirectToAction(nameof(Index));
         }
 
