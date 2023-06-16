@@ -18,6 +18,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+//emailsender
 builder.Services.AddTransient<IEmailSender>(s => new EmailSendeer("localhost", 25, "no-reply@leavemanagement.com"));
 //Inject Repository 
 
@@ -31,6 +32,7 @@ builder.Services.AddTransient<IEmailSender>(s => new EmailSendeer("localhost", 2
 builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
+builder.Services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
 
 
 //add for AutoMapper  

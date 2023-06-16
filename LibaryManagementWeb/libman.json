@@ -7,14 +7,16 @@
       "destination": "wwwroot/lib/sweetalert/"
     },
     {
-      "provider": "cdnjs",
       "library": "font-awesome@6.4.0",
       "destination": "wwwroot/lib/font-awesome/"
     },
     {
-      "provider": "cdnjs",
       "library": "datatables@1.10.21",
       "destination": "wwwroot/lib/datatables/"
+    },
+    {
+      "library": "jqueryui@1.13.2",
+      "destination": "wwwroot/lib/jqueryui/"
     }
   ]
 }

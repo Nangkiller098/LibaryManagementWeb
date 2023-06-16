@@ -106,9 +106,9 @@ namespace LibaryManagementWeb.Data.Migrations
                         {
                             Id = "2aba66f2-76c1-4120-b0be-ea1ec98c6026",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "63fecb22-aca5-4a5c-968d-fd0690024ee2",
-                            DateJoined = new DateTime(2023, 6, 15, 21, 14, 2, 375, DateTimeKind.Local).AddTicks(218),
-                            DateOfBirth = new DateTime(2023, 6, 15, 21, 14, 2, 375, DateTimeKind.Local).AddTicks(227),
+                            ConcurrencyStamp = "d406e2bc-1a62-4a5c-8864-a7ca34d6b4af",
+                            DateJoined = new DateTime(2023, 6, 16, 21, 21, 19, 835, DateTimeKind.Local).AddTicks(8284),
+                            DateOfBirth = new DateTime(2023, 6, 16, 21, 21, 19, 835, DateTimeKind.Local).AddTicks(8296),
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "system",
@@ -116,9 +116,9 @@ namespace LibaryManagementWeb.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKJ6FmnIdSHbQsLX7o1052PXUgTKwsS+vgAv+pxIHlRmWvV+hCbcZ2Q3ImI0LwBWWw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEW2w25Y0LJFJ2aHb8RzOReB+PJLEc2SOcT0orn+CGWcTcsDxPmOy0yEkEp/WB0s8w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "fec47c8c-8236-4f91-979f-106f6b1bead3",
+                            SecurityStamp = "a2923401-5328-4dd2-8a3f-8a0713289da8",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com"
                         },
@@ -126,9 +126,9 @@ namespace LibaryManagementWeb.Data.Migrations
                         {
                             Id = "78e6e5a8-0d19-4710-8a4c-95cc89545e60",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0546a3bc-2b75-4df1-b6e2-e1e491f2bc87",
-                            DateJoined = new DateTime(2023, 6, 15, 21, 14, 2, 445, DateTimeKind.Local).AddTicks(5885),
-                            DateOfBirth = new DateTime(2023, 6, 15, 21, 14, 2, 445, DateTimeKind.Local).AddTicks(5896),
+                            ConcurrencyStamp = "45e1c862-09a2-433c-82f6-01998894715b",
+                            DateJoined = new DateTime(2023, 6, 16, 21, 21, 19, 897, DateTimeKind.Local).AddTicks(9096),
+                            DateOfBirth = new DateTime(2023, 6, 16, 21, 21, 19, 897, DateTimeKind.Local).AddTicks(9106),
                             Email = "user@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "system",
@@ -136,9 +136,9 @@ namespace LibaryManagementWeb.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@GMAIL.COM",
                             NormalizedUserName = "USER@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBBLIJuTIy2CX/BynX0rvPBHEiFF8VUARRe7N4N9IWnXmLWQqQ/kyydWjZ7ZiYMNOg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFLcZhosZLphZFmJID0oEPuRzHvLn5XHT8nOMjWWS+Sq5HWcjmuiyPC/Pf6MCOHvOA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3599e0cf-8fe5-4b5d-9fb5-bb0854687adc",
+                            SecurityStamp = "11dea378-d3a7-4a9d-b407-7e7fc4b27b8c",
                             TwoFactorEnabled = false,
                             UserName = "user@gmail.com"
                         });
@@ -175,6 +175,51 @@ namespace LibaryManagementWeb.Data.Migrations
                     b.HasIndex("LeaveTypeId");
 
                     b.ToTable("LeaveAllocations");
+                });
+
+            modelBuilder.Entity("LibaryManagementWeb.Data.LeaveRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool?>("Approved")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Cancelled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateRequested")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("LeaveTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RequestComments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RequestingEmpolyeeId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LeaveTypeId");
+
+                    b.ToTable("LeaveRequests");
                 });
 
             modelBuilder.Entity("LibaryManagementWeb.Data.LeaveType", b =>
@@ -366,6 +411,17 @@ namespace LibaryManagementWeb.Data.Migrations
                 });
 
             modelBuilder.Entity("LibaryManagementWeb.Data.LeaveAllocation", b =>
+                {
+                    b.HasOne("LibaryManagementWeb.Data.LeaveType", "LeaveType")
+                        .WithMany()
+                        .HasForeignKey("LeaveTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LeaveType");
+                });
+
+            modelBuilder.Entity("LibaryManagementWeb.Data.LeaveRequest", b =>
                 {
                     b.HasOne("LibaryManagementWeb.Data.LeaveType", "LeaveType")
                         .WithMany()
