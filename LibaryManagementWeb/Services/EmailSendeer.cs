@@ -5,9 +5,9 @@ namespace LibaryManagementWeb.Services
 {
     public class EmailSendeer : IEmailSender
     {
-        private string smtpServer;
-        private int smtpPort;
-        private string fromEmailAddress;
+        private readonly string smtpServer;
+        private readonly int smtpPort;
+        private readonly string fromEmailAddress;
 
         public EmailSendeer(string smtpServer, int smtpPort, string fromEmailAddress)
         {

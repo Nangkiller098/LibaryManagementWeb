@@ -34,9 +34,9 @@
             </td>
             <td>
                     <button data-id="@item.Id" class="btn btn-sm btn-primary allocateBtn" asp-route-id="@item.Id" type="button">Allocate Leave</button>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="fa-sharp fa-solid fa-pen-to-square"></i>Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info"><i class="fa-sharp fa-solid fa-circle-info"></i>Details</a> |
-                    <button data-id="@item.Id" class="btn btn-sm btn-danger deleteBtn" asp-route-id="@item.Id" type="button"><i class="fa-sharp fa-solid fa-delete-left"></i>Delete</button>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="fa-sharp fa-solid fa-pen-to-square"></i></a>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info"><i class="fa-sharp fa-solid fa-circle-info"></i></a>
+                    <button data-id="@item.Id" class="btn btn-sm btn-danger deleteBtn" asp-route-id="@item.Id" type="button"><i class="fa-sharp fa-solid fa-delete-left"></i></button>
             </td>
         </tr>
 }
@@ -46,7 +46,7 @@
     <input type="hidden" value="" id="leaveTypeId" name="Id" />
 </form>
 <form id="allocationForm" asp-action="AllocateLeave">
-    <input type="hidden" value="" id="leaveTypeId" name="Id" />
+    <input type="hidden" value="" id="allocateleavetypeId" name="Id" />
 </form>
 
 @section Scripts
@@ -54,12 +54,6 @@
     <script>
 
         $(function(){
-            $('.table').DataTable({
-                "responsive": true, 
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            });
 
             $('.deleteBtn').click(function(e){
                 swal({
@@ -90,7 +84,7 @@
                     if (confirm) {
                         var btn = $(this);
                         var id = btn.data("id");
-                        $('#leaveTypeId').val(id);
+                        $('#allocateleavetypeId').val(id);
                         $('#allocationForm').submit();
                     }
                 });

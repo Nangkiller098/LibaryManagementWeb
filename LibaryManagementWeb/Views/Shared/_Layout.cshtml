@@ -35,6 +35,9 @@
                         </li>
                         @if(User.IsInRole("Administrator"))
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Employee" asp-action="Index">Employee</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Leave Management</a>
                                 <div class="dropdown-menu" text-dark>
@@ -70,6 +73,16 @@
     <script src="~/lib/datatables/js/dataTables.bootstrap4.js"></script>
 @*    <script src="~/lib/font-awesome/js/all.js"></script>
     <script src="~/lib/font-awesome/js/fontawesome.js"></script>*@
+    <script>
+        $(function(){
+            $('.table').DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            });
+        });
+    </script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

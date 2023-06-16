@@ -30,6 +30,7 @@ builder.Services.AddTransient<IEmailSender>(s => new EmailSendeer("localhost", 2
 //it open and close connection after done
 builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
 
 
 //add for AutoMapper  
