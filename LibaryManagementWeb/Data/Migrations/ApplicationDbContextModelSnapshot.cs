@@ -174,7 +174,7 @@ namespace LibaryManagementWeb.Data.Migrations
 
                     b.HasIndex("LeaveTypeId");
 
-                    b.ToTable("LeaveAllocations");
+                    b.ToTable("LeaveAllocations", (string)null);
                 });
 
             modelBuilder.Entity("LibaryManagementWeb.Data.LeaveRequest", b =>
@@ -219,7 +219,7 @@ namespace LibaryManagementWeb.Data.Migrations
 
                     b.HasIndex("LeaveTypeId");
 
-                    b.ToTable("LeaveRequests");
+                    b.ToTable("LeaveRequests", (string)null);
                 });
 
             modelBuilder.Entity("LibaryManagementWeb.Data.LeaveType", b =>
@@ -244,7 +244,7 @@ namespace LibaryManagementWeb.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("LeaveTypes");
+                    b.ToTable("LeaveTypes", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

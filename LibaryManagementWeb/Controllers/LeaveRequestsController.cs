@@ -1,4 +1,5 @@
-﻿using LibaryManagementWeb.Data;
+﻿using LibaryManagementWeb.Contract;
+using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,9 +11,12 @@ namespace LibaryManagementWeb.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public LeaveRequestsController(ApplicationDbContext context)
+        private readonly ILeaveRequestRepository _leaveRequestRepository;
+
+        public LeaveRequestsController(ApplicationDbContext context, ILeaveRequestRepository leaveRequestRepository)
         {
             _context = context;
+            _leaveRequestRepository = leaveRequestRepository;
         }
 
         // GET: LeaveRequests
@@ -20,6 +24,12 @@ namespace LibaryManagementWeb.Controllers
         {
             var applicationDbContext = _context.LeaveRequests.Include(l => l.LeaveType);
             return View(await applicationDbContext.ToListAsync());
+        }
+
+        public async Task<ActionResult> MyLeave()
+        {
+            var model = await _leaveRequestRepository.GetMyLeaveDetails();
+            return View(model);
         }
 
         // GET: LeaveRequests/Details/5
@@ -57,16 +67,24 @@ namespace LibaryManagementWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StartDate,EndDate,LeaveTypeId,DateRequested,RequestComments,Approved,Cancelled,RequestingEmpolyeeId,Id,DateCreated,DateModified")] LeaveRequest leaveRequest)
+        public async Task<IActionResult> Create(LeaveRequestCreateVM model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(leaveRequest);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    await _leaveRequestRepository.CreateLeaveRequest(model);
+                    return RedirectToAction(nameof(Index));
+
+                }
             }
-            ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "Id", "Name", leaveRequest.LeaveTypeId);
-            return View(leaveRequest);
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+            model.LeaveType = new SelectList(_context.LeaveTypes, "Id", "Name", model.LeaveTypeId);
+            return View(model);
         }
 
         // GET: LeaveRequests/Edit/5

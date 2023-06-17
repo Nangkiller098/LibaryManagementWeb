@@ -18,6 +18,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddHttpContextAccessor();
 //emailsender
 builder.Services.AddTransient<IEmailSender>(s => new EmailSendeer("localhost", 25, "no-reply@leavemanagement.com"));
 //Inject Repository 
