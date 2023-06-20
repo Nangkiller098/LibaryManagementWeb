@@ -8,5 +8,7 @@ namespace LibaryManagementWeb.Contract
         Task CreateLeaveRequest(LeaveRequestCreateVM model);
         Task<EmployeeLeaveRequestVM> GetMyLeaveDetails();
         Task<List<LeaveRequest>> GetAllAsync(string employeeId);
+        //Task ChangeApprovalStatus(int leaveRequestId, bool approved);
+        Task<AdminiLeaveRequestViewVM> GetMyAdminiLeaveLists();
     }
 }

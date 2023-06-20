@@ -2,11 +2,13 @@
 using LibaryManagementWeb.Contract;
 using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibaryManagementWeb.Controllers
 {
+    [Authorize]
     public class EmployeeController : Controller
     {
         // GET: EmployeeController

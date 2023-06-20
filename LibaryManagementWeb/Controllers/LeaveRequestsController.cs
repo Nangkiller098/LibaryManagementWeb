@@ -1,12 +1,14 @@
 ﻿using LibaryManagementWeb.Contract;
 using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibaryManagementWeb.Controllers
 {
+    [Authorize]
     public class LeaveRequestsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,11 +21,13 @@ namespace LibaryManagementWeb.Controllers
             _leaveRequestRepository = leaveRequestRepository;
         }
 
+        [Authorize(Roles = Roles.Administrator)]
         // GET: LeaveRequests
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.LeaveRequests.Include(l => l.LeaveType);
-            return View(await applicationDbContext.ToListAsync());
+            var model = await _leaveRequestRepository.GetMyAdminiLeaveLists();
+
+            return View(model);
         }
 
         public async Task<ActionResult> MyLeave()

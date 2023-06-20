@@ -3,13 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace LibaryManagementWeb.Models
 {
+
     public class LeaveRequestCreateVM : IValidatableObject
     {
 
         public DateTime? StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
-
+        [Display(Name = "Leave Type")]
         public int LeaveTypeId { get; set; }
         public SelectList LeaveType { get; set; }
         public string RequestComments { get; set; }
