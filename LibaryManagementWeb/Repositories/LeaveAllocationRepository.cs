@@ -57,6 +57,11 @@ namespace LibaryManagementWeb.Repositories
             return model;
         }
 
+        public async Task<LeaveAllocation> GetEmployeeAllocation(string employeeId, int leaveTypeId)
+        {
+            return await _context.LeaveAllocations.FirstOrDefaultAsync(q => q.EmployeeId == employeeId && q.LeaveTypeId == leaveTypeId);
+        }
+
         public async Task LeaveAllocation(int leaveTypeId)
         {
             var employees = await _userManager.GetUsersInRoleAsync(Roles.User);

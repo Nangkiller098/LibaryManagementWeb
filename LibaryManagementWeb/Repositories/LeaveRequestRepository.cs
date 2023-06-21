@@ -29,35 +29,68 @@ namespace LibaryManagementWeb.Repositories
             _userManager = userManager;
         }
 
-        //public async Task ChangeApprovalStatus(int leaveRequestId, bool approved)
-        //{
-        //    //var leaveRequest = await GetAsync(leaveRequestId);
-        //    //leaveRequest.Approved = approved;
-        //    //if (approved)
-        //    //{
-        //    //    var allocation = await _leaveAllocationRepository.GetEmployeeAllocation(leaveRequest.RequestingEmpolyeeId, leaveRequestId);
-        //    //    int daysRequested = (int)(leaveRequest.EndDate - leaveRequest.StartDate).TotalDays;
-        //    //    allocation.NumberOfDays -= daysRequested;
+        public async Task CancelLeaveRequest(int leaveRequestId)
+        {
+            var leaveRequest = await GetAsync(leaveRequestId);
+            leaveRequest.Cancelled = true;
+            await UpdateAsync(leaveRequest);
+        }
 
-        //    //    await _leaveAllocationRepository.UpdateAsync(allocation);
-        //    //}
-        //    //await UpdateAsync(leaveRequest);
-        //    throw new NotImplementedException();
-        //}
+        public async Task ChangeApprovalStatus(int leaveRequestId, bool approved)
+        {
+            var leaveRequest = await GetAsync(leaveRequestId);
+            leaveRequest.Approved = approved;
+            if (approved)
+            {
+                var allocation = await _leaveAllocationRepository.GetEmployeeAllocation(leaveRequest.RequestingEmpolyeeId, leaveRequest.LeaveTypeId);
+                int daysRequested = (int)(leaveRequest.EndDate - leaveRequest.StartDate).TotalDays;
+                allocation.NumberOfDays -= daysRequested;
 
-        public async Task CreateLeaveRequest(LeaveRequestCreateVM model)
+                await _leaveAllocationRepository.UpdateAsync(allocation);
+            }
+            await UpdateAsync(leaveRequest);
+        }
+
+        public async Task<bool> CreateLeaveRequest(LeaveRequestCreateVM model)
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
+            var leaveAllocation = await _leaveAllocationRepository.GetEmployeeAllocation(user.Id, model.LeaveTypeId);
+
+            if (leaveAllocation == null)
+            {
+                return false;
+            }
+            int dayRequested = (int)(model.EndDate.Value - model.StartDate.Value).TotalDays;
+            if (dayRequested > leaveAllocation.NumberOfDays)
+            {
+                return false;
+            }
             var leaveRequest = _mapper.Map<LeaveRequest>(model);
             leaveRequest.DateRequested = DateTime.Now;
             leaveRequest.RequestingEmpolyeeId = user?.Id;
             await AddAsync(leaveRequest);
+            return true;
 
         }
 
         public async Task<List<LeaveRequest>> GetAllAsync(string employeeId)
         {
             return await _context.LeaveRequests.Where(q => q.RequestingEmpolyeeId == employeeId).ToListAsync();
+        }
+
+        public async Task<LeaveRequestVM> GetLeaveRequestAsync(int id)
+        {
+            var leaveRequest = await _context.LeaveRequests
+                .Include(q => q.LeaveType)
+                .FirstOrDefaultAsync(q => q.Id == id);
+
+            if (leaveRequest == null)
+            {
+                return null;
+            }
+            var model = _mapper.Map<LeaveRequestVM>(leaveRequest);
+            model.Employee = _mapper.Map<EmployeeListVM>(await _userManager.FindByIdAsync(leaveRequest.RequestingEmpolyeeId));
+            return model;
         }
 
         public async Task<AdminiLeaveRequestViewVM> GetMyAdminiLeaveLists()
