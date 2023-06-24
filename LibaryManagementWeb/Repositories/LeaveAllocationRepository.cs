@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using LibaryManagementWeb.Contract;
 using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Models;
@@ -13,13 +14,19 @@ namespace LibaryManagementWeb.Repositories
         private readonly UserManager<Employee> _userManager;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
         private readonly IMapper _mapper;
+        private readonly AutoMapper.IConfigurationProvider _configurationProvider;
 
-        public LeaveAllocationRepository(ApplicationDbContext context, UserManager<Employee> userManager, ILeaveTypeRepository leaveTypeRepository, IMapper mapper) : base(context)
+        public LeaveAllocationRepository(ApplicationDbContext context,
+            UserManager<Employee> userManager,
+            ILeaveTypeRepository leaveTypeRepository,
+            IMapper mapper,
+            AutoMapper.IConfigurationProvider configurationProvider) : base(context)
         {
-            this._context = context;
-            this._userManager = userManager;
-            this._leaveTypeRepository = leaveTypeRepository;
-            this._mapper = mapper;
+            _context = context;
+            _userManager = userManager;
+            _leaveTypeRepository = leaveTypeRepository;
+            _mapper = mapper;
+            _configurationProvider = configurationProvider;
         }
 
         public async Task<bool> AllocationExists(string employeeId, int leaveTypeId, int period)
@@ -32,6 +39,7 @@ namespace LibaryManagementWeb.Repositories
             var alloction = await _context.LeaveAllocations
                 .Include(q => q.LeaveType)
                 .Where(q => q.EmployeeId == employeeId)
+                .ProjectTo<LeaveAllocationVM>(_configurationProvider)
                  .ToListAsync();
             var employee = await _userManager.FindByIdAsync(employeeId);
             var employeeAllocationModel = _mapper.Map<EmployeeAllocationVM>(employee);

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using LibaryManagementWeb.Contract;
 using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Models;
@@ -15,18 +16,22 @@ namespace LibaryManagementWeb.Repositories
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly UserManager<Employee> _userManager;
+        private readonly AutoMapper.IConfigurationProvider _configurationProvider;
 
         public LeaveRequestRepository(ApplicationDbContext context,
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor,
             ILeaveAllocationRepository leaveAllocationRepository,
-            UserManager<Employee> userManager) : base(context)
+            UserManager<Employee> userManager,
+            AutoMapper.IConfigurationProvider configurationProvider
+            ) : base(context)
         {
             _context = context;
             _mapper = mapper;
             _httpContextAccessor = httpContextAccessor;
             _leaveAllocationRepository = leaveAllocationRepository;
             _userManager = userManager;
+            _configurationProvider = configurationProvider;
         }
 
         public async Task CancelLeaveRequest(int leaveRequestId)
@@ -73,9 +78,11 @@ namespace LibaryManagementWeb.Repositories
 
         }
 
-        public async Task<List<LeaveRequest>> GetAllAsync(string employeeId)
+        public async Task<List<LeaveRequestVM>> GetAllAsync(string employeeId)
         {
-            return await _context.LeaveRequests.Where(q => q.RequestingEmpolyeeId == employeeId).ToListAsync();
+            return await _context.LeaveRequests.Where(q => q.RequestingEmpolyeeId == employeeId)
+                .ProjectTo<LeaveRequestVM>(_configurationProvider)
+                .ToListAsync();
         }
 
         public async Task<LeaveRequestVM> GetLeaveRequestAsync(int id)
@@ -115,7 +122,7 @@ namespace LibaryManagementWeb.Repositories
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
             var allocation = (await _leaveAllocationRepository.GetEmployeeAllocation(user.Id)).LeaveAllocations;
-            var requests = _mapper.Map<List<LeaveRequestVM>>(await GetAllAsync(user.Id));
+            var requests = await GetAllAsync(user.Id);
 
             var model = new EmployeeLeaveRequestVM
             {
@@ -124,7 +131,6 @@ namespace LibaryManagementWeb.Repositories
             };
             return model;
         }
-
 
     }
 }
