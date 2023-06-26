@@ -18,9 +18,9 @@ namespace LibaryManagementWeb.Controllers
 
         public LeaveTypesController(IMapper mapper, ILeaveTypeRepository leaveTypeRepository, ILeaveAllocationRepository leaveAllocationRepository)
         {
-            this._mapper = mapper;
-            this._leaveTypeRepository = leaveTypeRepository;
-            this._leaveAllocationRepository = leaveAllocationRepository;
+            _mapper = mapper;
+            _leaveTypeRepository = leaveTypeRepository;
+            _leaveAllocationRepository = leaveAllocationRepository;
         }
 
         // GET: LeaveTypes

@@ -102,10 +102,14 @@ namespace LibaryManagementWeb.Repositories
 
         public async Task<AdminiLeaveRequestViewVM> GetMyAdminiLeaveLists()
         {
-            var leaveRequests = await _context.LeaveRequests.Include(q => q.LeaveType).ToListAsync();
+            var leaveRequests = await _context.LeaveRequests
+                //.Where(q => q.Cancelled == false)
+                .Include(q => q.LeaveType)
+                .ToListAsync();
             var model = new AdminiLeaveRequestViewVM
             {
-                ToTalRequest = leaveRequests.Count(q => q.Cancelled == false),
+                //ToTalRequest = leaveRequests.Count(q => q.Cancelled == false),
+                ToTalRequest = leaveRequests.Count,
                 ApproveRequest = leaveRequests.Count(q => q.Approved == true),
                 PendingRequest = leaveRequests.Count(q => q.Approved == null && q.Cancelled == false),
                 RejectedRequested = leaveRequests.Count(q => q.Approved == false),
@@ -113,7 +117,8 @@ namespace LibaryManagementWeb.Repositories
             };
             foreach (var leaveRequest in model.LeaveRequests)
             {
-                leaveRequest.Employee = _mapper.Map<EmployeeListVM>(await _userManager.FindByIdAsync(leaveRequest.RequestingEmpolyeeId));
+                leaveRequest.Employee = _mapper.Map<EmployeeListVM>(await _userManager
+                    .FindByIdAsync(leaveRequest.RequestingEmpolyeeId));
             }
             return model;
         }

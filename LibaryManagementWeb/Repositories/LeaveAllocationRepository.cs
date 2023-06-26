@@ -37,6 +37,7 @@ namespace LibaryManagementWeb.Repositories
         public async Task<EmployeeAllocationVM> GetEmployeeAllocation(string employeeId)
         {
             var alloction = await _context.LeaveAllocations
+                //include mean innerjoin
                 .Include(q => q.LeaveType)
                 .Where(q => q.EmployeeId == employeeId)
                 .ProjectTo<LeaveAllocationVM>(_configurationProvider)
