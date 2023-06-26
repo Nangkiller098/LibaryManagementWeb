@@ -105,9 +105,9 @@ namespace LibaryManagementWeb.Repositories
             var leaveRequests = await _context.LeaveRequests.Include(q => q.LeaveType).ToListAsync();
             var model = new AdminiLeaveRequestViewVM
             {
-                ToTalRequest = leaveRequests.Count,
+                ToTalRequest = leaveRequests.Count(q => q.Cancelled == false),
                 ApproveRequest = leaveRequests.Count(q => q.Approved == true),
-                PendingRequest = leaveRequests.Count(q => q.Approved == null),
+                PendingRequest = leaveRequests.Count(q => q.Approved == null && q.Cancelled == false),
                 RejectedRequested = leaveRequests.Count(q => q.Approved == false),
                 LeaveRequests = _mapper.Map<List<LeaveRequestVM>>(leaveRequests),
             };

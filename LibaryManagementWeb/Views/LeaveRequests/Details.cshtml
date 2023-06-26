@@ -4,7 +4,12 @@
     ViewData["Title"] = "Leave Request Details";
      string className="";
      string headeringText="";
-    if (Model.Approved==null)
+    if (Model.Cancelled)
+    {
+        headeringText = "Canceled";
+        className = "dark";
+    }
+    else if (Model.Approved==null)
     {
         headeringText = "Pending Approval";
         className = "warning";
@@ -70,7 +75,7 @@
     </dl>
 </div>
 <div>
-   @if (Model.Approved==null)
+   @if (Model.Approved==null && Model.Cancelled==false)
     {
         <form asp-action="ApproveRequest">
             <input name="Id" value="@Model.Id" type="hidden"/>

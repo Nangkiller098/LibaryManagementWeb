@@ -9,6 +9,7 @@ namespace LibaryManagementWeb.Models
         public string Firstname { get; set; }
         [Display(Name = "Last Name")]
         public string Lastname { get; set; }
+
         [Display(Name = "Date Joined")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         [DataType(DataType.Date)]
