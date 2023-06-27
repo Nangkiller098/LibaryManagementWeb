@@ -15,12 +15,19 @@ namespace LibaryManagementWeb.Controllers
         private readonly UserManager<Employee> _userManager;
         private readonly IMapper _mapper;
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
+        private readonly ILogger<EmployeeController> _logger;
 
-        public EmployeeController(UserManager<Employee> userManager, IMapper mapper, ILeaveAllocationRepository leaveAllocationRepository)
+        public EmployeeController(
+            UserManager<Employee> userManager,
+            IMapper mapper,
+            ILeaveAllocationRepository leaveAllocationRepository,
+            ILogger<EmployeeController> logger
+            )
         {
             this._userManager = userManager;
             this._mapper = mapper;
             this._leaveAllocationRepository = leaveAllocationRepository;
+            _logger = logger;
         }
         // GET: EmployeeController
         public async Task<IActionResult> Index()
@@ -28,6 +35,7 @@ namespace LibaryManagementWeb.Controllers
             var employee = await _userManager.GetUsersInRoleAsync(Roles.User);
             var model = _mapper.Map<List<EmployeeListVM>>(employee);
             return View(model);
+
         }
         // GET: EmployeeController/Details/5
         public async Task<IActionResult> ViewAllocations(string id)
@@ -39,6 +47,7 @@ namespace LibaryManagementWeb.Controllers
         //GET: EmployeeController/Edit/5
         public async Task<ActionResult> EditAllocation(int id)
         {
+
             var model = await _leaveAllocationRepository.GetEmployeeAllocation(id);
             if (model == null)
             {
@@ -60,15 +69,12 @@ namespace LibaryManagementWeb.Controllers
                     {
                         return RedirectToAction(nameof(ViewAllocations), new { id = model.EmployeeId });
                     }
-
-
                 }
-
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, ex.Message);
 
+                _logger.LogError(ex, "Error EditAllocation Employee");
             }
             model.Employee = _mapper.Map<EmployeeListVM>(_userManager.FindByIdAsync(model.EmployeeId));
             model.LeaveType = _mapper.Map<LeaveTypeVM>(await _leaveAllocationRepository.GetAsync(model.LeaveTypeId));

@@ -38,17 +38,21 @@ builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository
 builder.Services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
 
 
-builder.Host.UseSerilog((ctx, lc) =>
-lc.WriteTo.Console()
-.ReadFrom.Configuration(ctx.Configuration));
 
 
 //add for AutoMapper  
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
+builder.Host.UseSerilog((ctx, lc) =>
+    lc.WriteTo.Console()
+    .ReadFrom.Configuration(ctx.Configuration));
+
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -64,9 +68,10 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseSerilogRequestLogging();
+
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

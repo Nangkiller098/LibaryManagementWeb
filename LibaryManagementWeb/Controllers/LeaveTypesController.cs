@@ -33,7 +33,6 @@ namespace LibaryManagementWeb.Controllers
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
-            throw new Exception("Testing Seri log");
 
             var leaveTypes = _mapper.Map<List<LeaveTypeVM>>(await _leaveTypeRepository.GetAllAsync());
             return View(leaveTypes);

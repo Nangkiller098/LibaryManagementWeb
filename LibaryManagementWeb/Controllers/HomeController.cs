@@ -18,6 +18,7 @@ namespace LibaryManagementWeb.Controllers
         public IActionResult Index()
         {
             return View();
+
         }
         [Authorize]
         public IActionResult Privacy()
@@ -29,7 +30,7 @@ namespace LibaryManagementWeb.Controllers
         public IActionResult Error()
         {
             var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
-            var exceptionHandlerPathfeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            var exceptionHandlerPathfeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             if (exceptionHandlerPathfeature != null)
             {
                 Exception exception = exceptionHandlerPathfeature.Error;
