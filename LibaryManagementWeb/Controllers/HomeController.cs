@@ -1,5 +1,6 @@
 ﻿using LibaryManagementWeb.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,12 +8,12 @@ namespace LibaryManagementWeb.Controllers
 {
     public class HomeController : Controller
     {
-        //private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> _logger;
 
-        //public HomeController(ILogger<HomeController> logger)
-        //{
-        //    _logger = logger;
-        //}
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
 
         public IActionResult Index()
         {
@@ -27,7 +28,16 @@ namespace LibaryManagementWeb.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            var exceptionHandlerPathfeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+            if (exceptionHandlerPathfeature != null)
+            {
+                Exception exception = exceptionHandlerPathfeature.Error;
+                _logger.LogError(exception, $"Error Encountered By User: {this.User?.Identity?.Name} | Request Id: {requestId}");
+
+            }
+            return View(new ErrorViewModel { RequestId = requestId });
+
         }
     }
 }

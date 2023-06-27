@@ -6,6 +6,7 @@ using LibaryManagementWeb.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,11 @@ builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository
 builder.Services.AddScoped<ILeaveRequestRepository, LeaveRequestRepository>();
 
 
+builder.Host.UseSerilog((ctx, lc) =>
+lc.WriteTo.Console()
+.ReadFrom.Configuration(ctx.Configuration));
+
+
 //add for AutoMapper  
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
@@ -58,7 +64,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSerilogRequestLogging();
 app.UseRouting();
 
 app.UseAuthorization();

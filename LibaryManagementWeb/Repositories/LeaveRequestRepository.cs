@@ -4,6 +4,7 @@ using LibaryManagementWeb.Contract;
 using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibaryManagementWeb.Repositories
@@ -17,13 +18,15 @@ namespace LibaryManagementWeb.Repositories
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
         private readonly UserManager<Employee> _userManager;
         private readonly AutoMapper.IConfigurationProvider _configurationProvider;
+        private readonly IEmailSender _emailSender;
 
         public LeaveRequestRepository(ApplicationDbContext context,
             IMapper mapper,
             IHttpContextAccessor httpContextAccessor,
             ILeaveAllocationRepository leaveAllocationRepository,
             UserManager<Employee> userManager,
-            AutoMapper.IConfigurationProvider configurationProvider
+            AutoMapper.IConfigurationProvider configurationProvider,
+            IEmailSender emailSender
             ) : base(context)
         {
             _context = context;
@@ -32,6 +35,7 @@ namespace LibaryManagementWeb.Repositories
             _leaveAllocationRepository = leaveAllocationRepository;
             _userManager = userManager;
             _configurationProvider = configurationProvider;
+            _emailSender = emailSender;
         }
 
         public async Task CancelLeaveRequest(int leaveRequestId)
@@ -39,6 +43,10 @@ namespace LibaryManagementWeb.Repositories
             var leaveRequest = await GetAsync(leaveRequestId);
             leaveRequest.Cancelled = true;
             await UpdateAsync(leaveRequest);
+            var user = await _userManager.FindByIdAsync(leaveRequest.RequestingEmpolyeeId);
+
+            await _emailSender.SendEmailAsync(user.Email, $"Leave Request Cancel", $"Your Leave Request from" +
+                $"{leaveRequest.StartDate} to {leaveRequest.EndDate} has been Cancel");
         }
 
         public async Task ChangeApprovalStatus(int leaveRequestId, bool approved)
@@ -54,6 +62,12 @@ namespace LibaryManagementWeb.Repositories
                 await _leaveAllocationRepository.UpdateAsync(allocation);
             }
             await UpdateAsync(leaveRequest);
+
+
+            var user = await _userManager.FindByIdAsync(leaveRequest.RequestingEmpolyeeId);
+            var approvalStatus = approved ? "Approved" : "Declined";
+            await _emailSender.SendEmailAsync(user.Email, $"Leave Request {approvalStatus}", $"Your Leave Request from" +
+                $"{leaveRequest.StartDate} to {leaveRequest.EndDate} has been {approvalStatus}");
         }
 
         public async Task<bool> CreateLeaveRequest(LeaveRequestCreateVM model)
@@ -74,6 +88,8 @@ namespace LibaryManagementWeb.Repositories
             leaveRequest.DateRequested = DateTime.Now;
             leaveRequest.RequestingEmpolyeeId = user?.Id;
             await AddAsync(leaveRequest);
+
+
             return true;
 
         }

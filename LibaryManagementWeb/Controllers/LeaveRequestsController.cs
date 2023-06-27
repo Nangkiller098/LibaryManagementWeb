@@ -14,11 +14,16 @@ namespace LibaryManagementWeb.Controllers
         private readonly ApplicationDbContext _context;
 
         private readonly ILeaveRequestRepository _leaveRequestRepository;
+        private readonly ILogger<LeaveRequestsController> _logger;
 
-        public LeaveRequestsController(ApplicationDbContext context, ILeaveRequestRepository leaveRequestRepository)
+        public LeaveRequestsController(ApplicationDbContext context,
+            ILeaveRequestRepository leaveRequestRepository,
+            ILogger<LeaveRequestsController> logger
+            )
         {
             _context = context;
             _leaveRequestRepository = leaveRequestRepository;
+            _logger = logger;
         }
 
         [Authorize(Roles = Roles.Administrator)]
@@ -55,10 +60,10 @@ namespace LibaryManagementWeb.Controllers
             {
                 await _leaveRequestRepository.ChangeApprovalStatus(id, approved);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                _logger.LogError(ex, "Error Approvaing Request");
             }
             return RedirectToAction(nameof(Index));
         }
@@ -82,10 +87,10 @@ namespace LibaryManagementWeb.Controllers
 
                 await _leaveRequestRepository.CancelLeaveRequest(id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                _logger.LogError(ex, "Error Cancel Request");
             }
             return RedirectToAction(nameof(MyLeave));
         }
@@ -111,7 +116,7 @@ namespace LibaryManagementWeb.Controllers
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, "Error Create Request");
                 ModelState.AddModelError(string.Empty, ex.Message);
             }
             model.LeaveType = new SelectList(_context.LeaveTypes, "Id", "Name", model.LeaveTypeId);
@@ -154,7 +159,7 @@ namespace LibaryManagementWeb.Controllers
                     _context.Update(leaveRequest);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
                     if (!LeaveRequestExists(leaveRequest.Id))
                     {
@@ -162,7 +167,7 @@ namespace LibaryManagementWeb.Controllers
                     }
                     else
                     {
-                        throw;
+                        _logger.LogError(ex, "Error Edit Request");
                     }
                 }
                 return RedirectToAction(nameof(Index));

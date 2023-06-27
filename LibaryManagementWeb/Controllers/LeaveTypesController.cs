@@ -15,17 +15,26 @@ namespace LibaryManagementWeb.Controllers
         private readonly IMapper _mapper;
         private readonly ILeaveTypeRepository _leaveTypeRepository;
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
+        private readonly ILogger<LeaveTypesController> _logger;
 
-        public LeaveTypesController(IMapper mapper, ILeaveTypeRepository leaveTypeRepository, ILeaveAllocationRepository leaveAllocationRepository)
+        public LeaveTypesController(
+            IMapper mapper,
+            ILeaveTypeRepository leaveTypeRepository,
+            ILeaveAllocationRepository leaveAllocationRepository,
+            ILogger<LeaveTypesController> logger
+            )
         {
             _mapper = mapper;
             _leaveTypeRepository = leaveTypeRepository;
             _leaveAllocationRepository = leaveAllocationRepository;
+            _logger = logger;
         }
 
         // GET: LeaveTypes
         public async Task<IActionResult> Index()
         {
+            throw new Exception("Testing Seri log");
+
             var leaveTypes = _mapper.Map<List<LeaveTypeVM>>(await _leaveTypeRepository.GetAllAsync());
             return View(leaveTypes);
         }
@@ -91,12 +100,14 @@ namespace LibaryManagementWeb.Controllers
             {
                 return NotFound();
             }
+            var leaveType = await _leaveTypeRepository.GetAsync(id);
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var leaveType = _mapper.Map<LeaveType>(leaveTypeVM);
+
+                    _mapper.Map(leaveTypeVM, leaveType);
                     await _leaveTypeRepository.UpdateAsync(leaveType);
                 }
                 catch (DbUpdateConcurrencyException)
