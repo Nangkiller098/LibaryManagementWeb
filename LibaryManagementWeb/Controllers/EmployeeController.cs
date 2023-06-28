@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
-using LibaryManagementWeb.Contract;
+using LibaryManagement.Application.Contract;
+using LibaryManagement.Common.Constants;
+using LibaryManagement.Common.Models;
 using LibaryManagementWeb.Data;
-using LibaryManagementWeb.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

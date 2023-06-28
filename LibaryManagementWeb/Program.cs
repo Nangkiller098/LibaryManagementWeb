@@ -1,5 +1,6 @@
-using LibaryManagementWeb.Configuration;
-using LibaryManagementWeb.Contract;
+using LibaryManagement.Application.Configuration;
+using LibaryManagement.Application.Contract;
+using LibaryManagement.Data;
 using LibaryManagementWeb.Data;
 using LibaryManagementWeb.Repositories;
 using LibaryManagementWeb.Services;

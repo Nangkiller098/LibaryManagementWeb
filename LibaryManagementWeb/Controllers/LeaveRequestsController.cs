@@ -1,6 +1,7 @@
-﻿using LibaryManagementWeb.Contract;
-using LibaryManagementWeb.Data;
-using LibaryManagementWeb.Models;
+﻿using LibaryManagement.Application.Contract;
+using LibaryManagement.Common.Constants;
+using LibaryManagement.Common.Models;
+using LibaryManagement.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
